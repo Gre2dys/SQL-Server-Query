@@ -18,3 +18,4 @@ INNER JOIN sys.databases as D
 ON C.database_id = D.database_id
 Cross APPLY sys.dm_exec_sql_text(A.sql_handle) as B
 Where A.session_id > 50 ORDER BY start_time ASC /* and blocking_session_id > 50 */ --- Deadlock Session
+
