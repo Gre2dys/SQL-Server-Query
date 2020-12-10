@@ -1,0 +1,13 @@
+select
+	i.name as Name
+,	i.loginname as LoginName
+,	p.principal_id
+,	p.type_desc as Type_Desc
+,	p.is_disabled as is_Disabled
+,	i.dbname as Mapping_DB
+,	i.denylogin as DenyLogin
+,	i.sysadmin as Sysadmin
+From sys.syslogins i 
+left join sys.server_principals p 
+on (i.name = p.name) 
+where i.name not like ('%##%') and i.name not like ('%NT%') order by principal_id asc
