@@ -1,0 +1,21 @@
+select 
+	A.[session_id]
+,	C.[database_id]
+,	A.[Host_Name] as [Host_Name]
+,	A.[Login_Name]
+,	A.[Login_time] as [Login_time]
+,	B.[Connect_Time]
+,	A.[status]
+,	B.[net_transport]
+,	B.[local_net_Address]
+,	B.[local_tcp_port]
+,	B.[Client_net_address]
+,	B.[Client_tcp_port]
+,	C.[Status] as Command_Status
+,	C.[Command]
+from sys.dm_Exec_sessions as A 
+	INNER JOIN sys.dm_exec_connections as B
+On A.session_id = B.session_id 
+INNER JOIN sys.dm_exec_requests as C
+On A.session_id = C.session_id
+where A.Status = 'running' Order by A.[session_id] ASC
