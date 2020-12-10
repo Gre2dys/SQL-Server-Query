@@ -1,0 +1,20 @@
+Create database BigDB
+go
+
+Use BigDB
+go
+
+Create table TestTBL(
+  seq	int	identity(1,1)
+, cola	varchar(max)
+)
+go
+
+while(1=1)
+		begin
+			insert into TestTBL
+				select top 1000
+					newid()
+						from sys.databases as a, sys.indexes as b, sys.columns as c, sys.sysaltfiles as d						
+					if (select  SIZE / 128.0 FROM SYS.DATABASE_FILES WHERE FILE_ID = 1)  > 50000  BREAK; --- Stop when mdf file is larger than 50000MB
+end
