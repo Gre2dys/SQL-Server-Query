@@ -1,0 +1,20 @@
+Select 
+A.Session_id
+, C.database_id
+, C.program_name
+, A.Start_time
+, A.Status
+, A.command
+, B.Text
+, A.blocking_session_id
+, A.wait_time
+, A.wait_type
+, A.last_wait_type
+, D.log_reuse_wait_desc
+From sys.dm_exec_requests as A
+INNER JOIN sys.dm_exec_sessions as C
+ON A.session_id = C.session_id
+INNER JOIN sys.databases as D
+ON C.database_id = D.database_id
+Cross APPLY sys.dm_exec_sql_text(A.sql_handle) as B
+Where A.session_id > 50 ORDER BY start_time ASC /* and blocking_session_id > 50 */ --- Deadlock Session
