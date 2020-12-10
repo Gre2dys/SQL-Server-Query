@@ -11,3 +11,4 @@ From sys.syslogins i
 left join sys.server_principals p 
 on (i.name = p.name) 
 where i.name not like ('%##%') and i.name not like ('%NT%') order by principal_id asc
+
