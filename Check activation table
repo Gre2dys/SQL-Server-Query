@@ -1,0 +1,19 @@
+SELECT
+A.[Name]
+, B.[Database_id]
+, C.[name] as TBL_Name
+, B.[Object_id]
+, C.[type]
+, C.[type_desc]
+, B.[last_user_scan] as Select_Time
+, B.[last_user_update] as DML_Time
+, E.[Text]
+	From sys.databases A
+		INNER JOIN sys.dm_db_index_usage_stats B
+		ON A.Database_id = B.Database_id
+		INNER JOIN sys.objects C
+		ON B.[object_id] = C.[object_id]
+		INNER Join sys.dm_exec_requests as D
+		ON D.[database_id] = B.[database_id]
+			Cross Apply sys.dm_exec_sql_text(D.sql_handle) as E
+Where B.[Database_id]  > 4
