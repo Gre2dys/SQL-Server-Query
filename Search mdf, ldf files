@@ -1,0 +1,19 @@
+select
+A.[name] as [DB_Name]
+, A.[Database_id]
+, B.[name] as [Logical_Name]
+, B.[FILENAME] as [FilePath]
+, convert(nvarchar(100), cast((B.[size] / 128.0) as decimal(38, 2))) + 'MB' as [Total_File_size]
+, CASE 
+when C.[is_percent_growth] = 0
+THEN CONVERT(NVARCHAR(100), CAST((B.growth / 128.0) AS DECIMAL(38,2))) + 'MB'
+ELSE CONVERT(NVARCHAR(100), B.growth) + '%'
+END Auto_Growth
+,convert(nvarchar(100), CAST(CAST(FILEPROPERTY(C.NAME, 'SpaceUsed') AS BIGINT) / 128.0 AS DECIMAL(38,2))) + 'MB' AS [UsedSizeMB]
+,convert(nvarchar(100), CAST(C.size / 128.0 - CAST(FILEPROPERTY(C.NAME, 'SpaceUsed') AS BIGINT) / 128.0 AS DECIMAL(38,2))) + 'MB' AS [UnusedSizeMB] 
+From sys.databases A
+INNER JOIN sys.sysaltfiles B
+ON A.database_id = B.dbid
+INNER JOIN sys.database_files C
+ON B.[name] = C.[name]
+
