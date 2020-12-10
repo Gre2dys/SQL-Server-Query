@@ -1,0 +1,18 @@
+Declare @BackupFolder varchar(100)
+Set @BackupFolder = 'C:\mssql\' --- Backup 경로 별도 지정 필요
+Declare @filename varchar(200)
+Set @filename = char(39)+@BackupFolder+'name_Full.bak' +char(39)
+Declare @mdfPath varchar(100)
+Set @mdfPath = char(39)+'C:\Program Files\Microsoft SQL Server\MSSQL13.TESTSQL\MSSQL\DATA\'+'name'+'.mdf'+char(39) --- restore 경로 지정 필요
+Declare @ldfPath varchar(100)
+Set @ldfPath = char(39)+'C:\Program Files\Microsoft SQL Server\MSSQL13.TESTSQL\MSSQL\DATA\'+'name'+'_log'+'.ldf'+char(39) --- restore 경로 지정 필요
+
+select 
+'Backup Database ' + name + ' to disk= ' +replace(@filename, 'name', name) as BackupQuery --- @filename의 'name'부분은 sys.databases의 name 컬럼으로 치환 
+, 'Restore Database ' + name + ' from disk = ' +replace(@filename, 'name', name) + ' with move ' + char(39)+ name + Char(39) + ' to ' + replace(@mdfpath, 'name', name)
++ char(44) + ' move ' +char(39)+ name +'_log'+char(39) + ' to ' + replace(@ldfpath, 'name', name) as RestoreQuery
+from sys.databases where database_id > 4
+
+
+Char(39) -- 아스키 코드로 ' 를 표현
+Char(44) -- 아스키 코드로 , 를 표현
